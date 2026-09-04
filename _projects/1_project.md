@@ -1,81 +1,19 @@
 ---
 layout: page
-title: project 1
-description: with background image
-img: assets/img/12.jpg
+title: Component-Level Optimization of an Intelligent Reflecting Surface
+description: Circuit-level PSO optimization for IRS beamforming that outperforms the reference paper's phase-model baseline by 38.4%
+img: assets/img/projects/irs-pso.png
 importance: 1
-category: work
-related_publications: true
+category: research
+github: https://github.com/doremonn2847/IRS-project-analysis
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+Final project for the *Electronics for IT* course (MiniProject20252), reproducing and extending Abeywickrama et al., "Intelligent Reflecting Surface: Practical Phase Shift Model and Beamforming Optimization" (IEEE Trans. Commun. 68(9), 2020).
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+Instead of optimizing the paper's abstract per-element phase shift θₙ — with reflection amplitude tied to it through an empirical curve fitted to one measured element — this project removes that intermediate model entirely and optimizes the physical circuit directly. For each of the *N* IRS elements, the shunt inductance, series inductance, varactor capacitance, and loss resistance become decision variables, with the reflection coefficient computed straight from element impedance. This turns the problem into a 4*N*-dimensional non-convex optimization, solved with a memetic particle swarm optimizer (constriction PSO with an APSO-style elitist perturbation, seeded by a phase-aligned coordinate-ascent pass, refined with L-BFGS-B).
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+**Result:** across 500 Monte Carlo channel realizations, the proposed component-level PSO reaches 97.3% of the ideal (lossless) IRS's rate — beating the paper's phase-model alternating optimization baseline (70.3%) by 38.4 percentage points. The gain holds from *N* = 10 to *N* = 80 elements (a 320-dimensional search space at the top end) and across the full AP–user distance sweep tested.
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+The full report documents the system model, optimizer design, five experiments, and — deliberately — the design mistakes made along the way, including a fixed-budget bug that made the 4-variable search underperform the 2-variable one despite a strictly larger feasible set.
 
-You can also put regular text between your rows of images, even citations {% cite einstein1950meaning %}.
-Say you wanted to write a bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
-
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
-
-{% raw %}
-
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-```
-
-{% endraw %}
+[Code, report, and full results on GitHub →](https://github.com/doremonn2847/IRS-project-analysis)
